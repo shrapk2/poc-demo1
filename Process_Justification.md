@@ -25,7 +25,7 @@ As for physical/bare metal, I rarely recommend dedicated hardware for anything s
 
 Above are my basic ethos into which platforms I'd chose, there are always external requirements that can drive the direction of the solution.
 
-For every solution, they must always within at least:
+For every solution, they must always conform to at a minimum:
 
 - Business requirements
 - Security requirements
