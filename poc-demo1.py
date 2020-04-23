@@ -29,7 +29,7 @@ def anagram_check(first, second):
 
 # AWS Lambda Compat
 def lambda_handler(event, context):
-    if anagram_check(event[0], event[1]):
+    if anagram_check(event['word0'], event['word1']):
         return {
             'statusCode': 200,
             'body': json.dumps('True')
