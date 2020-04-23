@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_user: kenney.s
+      ansible_python_interpreter: "/usr/local/bin/python3"

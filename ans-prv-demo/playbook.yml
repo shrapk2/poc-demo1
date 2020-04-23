@@ -1,0 +1,7 @@
+- hosts: localhost
+  gather_facts: false
+  name: Provisioning role for poc-demo Python code to AWS Lambda
+  become: false
+
+  roles:
+    - { role: ans-prv-demo, tags: ans-prv-demo }

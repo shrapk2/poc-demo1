@@ -1,0 +1,61 @@
+---
+- name: Stat Python for function name
+  shell: "grep lambda {{ ans_repo_path }}/{{ aws_lambda_function_name }}.py | awk '{ print $2 }' |cut -f1 -d '('"
+  register: python_key_function_name
+  tags:
+    - create
+    - never
+
+- name: Create archive of Python
+  archive:
+    path: "{{ ans_repo_path }}/{{ aws_lambda_function_name }}.py"
+    dest: "{{ ans_repo_path }}/{{ aws_lambda_function_name }}.zip"
+    force_archive: yes
+    format: zip
+  register: python_archive
+  tags:
+    - create
+    - never
+
+- name: Create Lambda Function
+  lambda:
+    aws_access_key: "{{ aws_acc_key }}"
+    aws_secret_key: "{{ aws_svc_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ aws_lambda_function_name }}"
+    state: present
+    zip_file: "{{ python_archive.dest }}"
+    runtime: "python3.8"
+    role: "{{ aws_lambda_role }}"
+    handler: "{{ aws_lambda_function_name }}.{{ python_key_function_name.stdout }}"
+  register: aws_lambda_create
+  tags:
+    - create
+    - never
+
+# execute tests
+- name: Execute Lambda Function
+  execute_lambda:
+    aws_access_key: "{{ aws_acc_key }}"
+    aws_secret_key: "{{ aws_svc_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ aws_lambda_function_name }}"
+    payload:
+      word0: "{{ item[0] }}"
+      word1: "{{ item[1] }}"
+  register: aws_lambda_execute
+  loop:
+    - ["meteor", "remote"]
+    - ["taco", "burrito"]
+  tags:
+    - execute
+    - never
+
+- name: Debugger 2
+  debug:
+    msg: "{{ item.item }} is {{ item.result.output.body }}"
+  with_items:
+    - "{{ aws_lambda_execute.results }}"
+  tags:
+    - execute
+    - never
